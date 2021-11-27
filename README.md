@@ -1,0 +1,2 @@
+ - application build command: gradle bootRun
+ - application url: http://localhost:8080/swagger-ui.index.html

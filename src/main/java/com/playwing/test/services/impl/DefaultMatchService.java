@@ -58,6 +58,10 @@ public class DefaultMatchService implements MatchService {
             PlayerDto firstPlayer = sortedPlayersBySkills.get(i);
             PlayerDto secondPlayer = sortedPlayersBySkills.get(i + 1);
 
+            if (firstPlayer == null || secondPlayer == null) {
+                continue;
+            }
+
             if (calculateDeltaOfSkillForPlayers(firstPlayer, secondPlayer) < playersSkillDeltaThreshold) {
                 step = pairStep;
                 matchedPlayers.add(new MatchDto(List.of(firstPlayer), List.of(secondPlayer)));
@@ -80,6 +84,10 @@ public class DefaultMatchService implements MatchService {
                 .sorted(squadComparator)
                 .collect(Collectors.toList());
 
+        if (sortedSquads.isEmpty()) {
+            return matchedSquads;
+        }
+
         int regularStep = 1;
         int pairStep = 2;
         int step = regularStep;
@@ -88,12 +96,17 @@ public class DefaultMatchService implements MatchService {
             List<PlayerDto> firstSquad = sortedSquads.get(i);
             List<PlayerDto> secondSquad = sortedSquads.get(i + 1);
 
+            if (firstSquad == null || secondSquad == null || firstSquad.isEmpty() || secondSquad.isEmpty()) {
+                continue;
+            }
+
             if (calculateDeltaOfSkillForSquads(firstSquad, secondSquad) < squadSkillsDeltaThreshold) {
                 step = pairStep;
                 matchedSquads.add(new MatchDto(firstSquad, secondSquad));
             } else {
                 step = regularStep;
             }
+
         }
 
         return matchedSquads;
